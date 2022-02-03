@@ -4,4 +4,14 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+  <servlet>
+    <servlet-name>ListDone</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlets.IndexServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ListDone</servlet-name>
+    <url-pattern>/listdone.do</url-pattern>
+  </servlet-mapping>
+
 </web-app>
