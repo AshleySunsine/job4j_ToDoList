@@ -90,6 +90,17 @@ public class ToDoStore implements Store {
     }
 
     @Override
+    public boolean doneNotDone(int id) {
+        Session session = sf.openSession();
+        session.beginTransaction();
+        Ticket ticket = session.load(Ticket.class, id);
+        ticket.setDone(!ticket.isDone());
+        session.getTransaction().commit();
+        session.close();
+        return true;
+    }
+
+    @Override
     public void close() throws Exception {
         StandardServiceRegistryBuilder.destroy(registry);
     }

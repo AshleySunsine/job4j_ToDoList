@@ -10,4 +10,5 @@ public interface Store extends AutoCloseable {
    List<Ticket> findAllDone();
    List<Ticket> findAllNotDone();
    boolean replace(int id, Ticket ticket);
+   boolean doneNotDone(int id);
 }

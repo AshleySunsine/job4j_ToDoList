@@ -14,4 +14,31 @@
     <url-pattern>/listdone.do</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ClickDone</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlets.ClickDoneServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ClickDone</servlet-name>
+    <url-pattern>/clickdone.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>SaveTicket</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlets.SaveTicketServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SaveTicket</servlet-name>
+    <url-pattern>/saveticket.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DeleteTicket</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlets.DeleteTicketServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteTicket</servlet-name>
+    <url-pattern>/deleteticket.do</url-pattern>
+  </servlet-mapping>
+
 </web-app>

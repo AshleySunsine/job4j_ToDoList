@@ -26,8 +26,12 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
 
 <body>
-<form action = "send()" method="post">
 <script>
+    var ticketDone;
+    var ticketNotDone;
+    var checkDone;
+    var tableDone;
+    var notDoneTable;
     function send() {
         $.ajax({
             type: "POST",
@@ -35,65 +39,125 @@
             dataType: "json"
         }).done(
             function(data) {
-              var ticketDone = data.ticketDone;
-              var ticketNotDone = data.ticketNotDone;
-
-              ticketDone.forEach(function (item, i, arr) {
-                  $('#doneTable tr:last').after('<tr><th scope="row">' + item.id + '</th><td>'
-                      + item.name + '</th><td>'
-                      + item.description + '</th><td>'
-                      + item.created + '</th><td>'
-                      + '<input class="form-check-input" checked="true" type="checkbox" id="' + item.id + '" name="' + item.id + '">'
-                      + '<label class="form-check-label" for="notDone">'
-                      + 'Выполнено'
-                      + '</label>'
-                      + '</td></tr>');
-              });
-
-                ticketNotDone.forEach(function (item, i, arr) {
+              ticketDone = data.ticketDone;
+              ticketNotDone = data.ticketNotDone;
+              checkDone = document.getElementsByName('notDoneCheck');
+              notDoneTable = document.getElementsByName('notDoneTable');
+              ticketNotDone.forEach(function (item, i, arr) {
                     $('#notDoneTable tr:last').after('<tr><th scope="row">' + item.id + '</th><td>'
                         + item.name + '</th><td>'
                         + item.description + '</th><td>'
                         + item.created + '</th><td>'
-                        + '<input class="form-check-input" type="checkbox" id="' + item.id + '" name="' + item.id + '">'
+                        + '<input class="form-check-input" '
+                        + 'type="checkbox" id="' + item.id + '" '
+                        + 'onchange="clickTicked(' + item.id + ')"'
+                        + 'name="' + item.id + '">'
                         + '<label class="form-check-label" for="notDone">'
                         + 'Выполнено'
                         + '</label>'
+                        + '</td><td>'
+                        + '<a class="btn btn-danger" onclick="clickDeleteTicked(' + item.id + ')" aria-label="Удалить">'
+                        + '<i class="fa fa-trash-o" aria-hidden="true"></i>'
+                        + '</a>'
                         + '</td></tr>');
                 });
-
+                showDone();
         }
         ).fail( function(xhr, textStatus, errorThrown) {
             alert(JSON.stringify(xhr));
         });
     }
 
-    function showDone(items) {
-
+    function clickCheckBox() {
+        reloadWindow();
     }
+
+    function reloadWindow() {
+        window.location.reload();
+    }
+
+    function showDone() {
+        if (document.getElementById('notDoneCheck').checked) {
+            ticketDone.forEach(function (item, i, arr) {
+                $('#doneTable tr:last').after('<tr><th scope="row">' + item.id + '</th><td>'
+                    + item.name + '</th><td>'
+                    + item.description + '</th><td>'
+                    + item.created + '</th><td>'
+                    + '<input class="form-check-input" checked="true" type="checkbox" id="' + item.id + '" '
+                    + 'name="' + item.id + '" '
+                    + 'onchange="clickTicked(' + item.id + ')">'
+                    + '<label class="form-check-label" for="notDone">'
+                    + 'Выполнено'
+                    + '</label>'
+                    + '</td><td>'
+                    + '<a class="btn btn-danger" onclick="clickDeleteTicked(' + item.id + ')" aria-label="Удалить">'
+                    + '<i class="fa fa-trash-o" aria-hidden="true"></i>'
+                    + '</a>'
+                    + '</td></tr>');
+            });
+        }
+    }
+
+    $(document).ready( function(){
+        send();
+    });
+
+    function clickTicked(id) {
+        $.ajax({
+            url: 'http://localhost:8081/todolist/clickdone.do',
+            method: 'post',
+            dataType: 'html',
+            data: {text: id},
+            success: function(data){
+                window.location.reload();
+            }
+        });
+    }
+
+    function clickDeleteTicked(id) {
+        $.ajax({
+            url: 'http://localhost:8081/todolist/deleteticket.do',
+            method: 'post',
+            dataType: 'html',
+            data: {text: id},
+            success: function(data){
+                window.location.reload();
+            }
+        });
+    }
+
 </script>
-    <form>
+    <form action="<%=request.getContextPath()%>/saveticket.do" method="post">
         <hr>
         <div class="col-md-4 mb-3">
-            <label for="todo">Название задачи</label>
-            <input type="email" class="form-control" name="todo" id="todo" placeholder="Название задачи">
+            <label for="todoName">Название задачи</label>
+            <input required type="text" class="form-control" name="todoName" id="todoName" placeholder="Название задачи">
         </div>
 
         <div class="col-md-5 mb-3">
             <label for="description">Описание задачи</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            <textarea required class="form-control" id="description" name="description" rows="3"></textarea>
         </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="form-check">
+             <button type="submit" class="btn btn-primary">Сохранить задачу</button>
+        </div>
+    </div>
+    </form>
+
         <hr>
         <div class="col-md-4 mb-3">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="notDone" name="notDone">
-                <label class="form-check-label" for="notDone">
+                <input class="form-check-input" type="checkbox" id="notDoneCheck" name="notDoneCheck" onchange="clickCheckBox()">
+                <label class="form-check-label" for="notDoneCheck">
                     Показать выполненые задачи
                 </label>
             </div>
         </div>
 
-    </form>
+
+    <form>
     <div class="col-md-7">
         <div class="row">
             <div class="card" style="width: 100%" name="Post">
@@ -109,6 +173,7 @@
                             <th scope="col">Описание</th>
                             <th scope="col">Дата создания</th>
                             <th scope="col">Статус</th>
+                            <th scope="col">X</th>
 
                         </tr>
                         </thead>
@@ -148,7 +213,8 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-primary" onclick="send()">Кнопка</button>
+
+    <button type="button" class="btn btn-primary" onclick="reloadWindow()">Обновить</button>
 </form>
 </body>
 </html>
