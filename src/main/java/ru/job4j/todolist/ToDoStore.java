@@ -3,12 +3,14 @@ package ru.job4j.todolist;
 import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.function.Function;
 
 public class ToDoStore implements Store {
 
@@ -19,85 +21,86 @@ public class ToDoStore implements Store {
 
     @Override
     public Ticket addTicket(Ticket ticket) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        ticket.setCreated(new Timestamp(System.currentTimeMillis()));
-        Integer id = (Integer) session.save(ticket);
-        ticket.setId(id);
-        session.getTransaction().commit();
-        session.close();
-        return ticket;
+        return this.tx(session -> {
+            ticket.setCreated(new Timestamp(System.currentTimeMillis()));
+            Integer id = (Integer) session.save(ticket);
+            ticket.setId(id);
+            return ticket;
+        });
     }
 
     @Override
     public boolean delete(int id) {
-        boolean out = false;
-        Session session = sf.openSession();
-        session.beginTransaction();
-        Ticket it = session.load(Ticket.class, id);
-        session.delete(it);
-        if ((session.load(Ticket.class, id)) == null) {
-            out = true;
-        }
-        session.getTransaction().commit();
-        session.close();
-        return out;
+        return this.tx(session -> {
+            boolean out = false;
+            Ticket it = session.load(Ticket.class, id);
+            session.delete(it);
+            if ((session.load(Ticket.class, id)) == null) {
+                out = true;
+            }
+            return out;
+        });
     }
 
     @Override
     public boolean replace(int id, Ticket ticket) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        ticket.setId(id);
-        session.replicate(ticket, ReplicationMode.OVERWRITE);
-        session.getTransaction().commit();
-        session.close();
-        return true;
+        return this.tx(session -> {
+            ticket.setId(id);
+            session.replicate(ticket, ReplicationMode.OVERWRITE);
+            return true;
+        });
     }
 
     @Override
     public List<Ticket> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List items = session.createQuery("from ru.job4j.todolist.Ticket").list();
-        session.getTransaction().commit();
-        session.close();
-        return items;
+        return this.tx(session -> {
+            List items = session.createQuery("from ru.job4j.todolist.Ticket").list();
+            return items;
+        });
     }
 
     @Override
     public List<Ticket> findAllDone() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List items = session.createSQLQuery(
-                        "select * from ticket where done=(" + true + ");")
-                .addEntity(Ticket.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return items;
+        return this.tx(session -> {
+            List items = session.createSQLQuery(
+                            "select * from ticket where done=(" + true + ");")
+                    .addEntity(Ticket.class).list();
+            return items;
+        });
     }
 
     @Override
     public List<Ticket> findAllNotDone() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List items = session.createSQLQuery(
-                        "select * from ticket where done=(" + false + ");")
-                .addEntity(Ticket.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return items;
+        return this.tx(session -> {
+            List items = session.createSQLQuery(
+                            "select * from ticket where done=(" + false + ");")
+                    .addEntity(Ticket.class).list();
+            return items;
+        });
     }
 
     @Override
     public boolean doneNotDone(int id) {
-        Session session = sf.openSession();
+        return this.tx(session -> {
+                Ticket ticket = session.load(Ticket.class, id);
+                ticket.setDone(!ticket.isDone());
+                return true;
+        });
+    }
+
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
         session.beginTransaction();
-        Ticket ticket = session.load(Ticket.class, id);
-        ticket.setDone(!ticket.isDone());
-        session.getTransaction().commit();
-        session.close();
-        return true;
+        try {
+            T rsl = command.apply(session);
+            session.getTransaction().commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
     }
 
     @Override
