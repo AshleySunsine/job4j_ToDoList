@@ -1,4 +1,4 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

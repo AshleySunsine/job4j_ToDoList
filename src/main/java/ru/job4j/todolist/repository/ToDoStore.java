@@ -1,12 +1,13 @@
-package ru.job4j.todolist;
+package ru.job4j.todolist.repository;
 
 import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.todolist.Store;
+import ru.job4j.todolist.model.Ticket;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -54,7 +55,8 @@ public class ToDoStore implements Store {
     @Override
     public List<Ticket> findAll() {
         return this.tx(session -> {
-            List items = session.createQuery("from ru.job4j.todolist.Ticket").list();
+            List items = session.createQuery("from ru.job4j.todolist.Ticket")
+                    .list();
             return items;
         });
     }
@@ -63,7 +65,8 @@ public class ToDoStore implements Store {
     public List<Ticket> findAllDone() {
         return this.tx(session -> {
             List items = session.createSQLQuery(
-                            "select * from ticket where done=(" + true + ");")
+                            "select * from ticket where done=( :isDone );")
+                    .setParameter("isDone", true)
                     .addEntity(Ticket.class).list();
             return items;
         });
@@ -73,7 +76,8 @@ public class ToDoStore implements Store {
     public List<Ticket> findAllNotDone() {
         return this.tx(session -> {
             List items = session.createSQLQuery(
-                            "select * from ticket where done=(" + false + ");")
+                            "select * from ticket where done=( :isDone );")
+                    .setParameter("isDone", false)
                     .addEntity(Ticket.class).list();
             return items;
         });
@@ -104,7 +108,7 @@ public class ToDoStore implements Store {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         StandardServiceRegistryBuilder.destroy(registry);
     }
 

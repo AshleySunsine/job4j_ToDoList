@@ -1,8 +1,7 @@
 package ru.job4j.todolist.servlets;
 
-import jdk.vm.ci.meta.Local;
-import ru.job4j.todolist.Ticket;
-import ru.job4j.todolist.ToDoStore;
+import ru.job4j.todolist.model.Ticket;
+import ru.job4j.todolist.repository.ToDoStore;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

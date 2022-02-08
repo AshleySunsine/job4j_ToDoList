@@ -1,6 +1,8 @@
 package ru.job4j.todolist;
 
 
+import ru.job4j.todolist.model.Ticket;
+
 import java.util.List;
 
 public interface Store extends AutoCloseable {

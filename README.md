@@ -13,3 +13,6 @@
 7. Данные должны сохраняться через hibernate.
 8. Для вида использовать bootstrap.
 9. Заполните README. Добавьте скриншоты запущенного приложения в Readme.md. 
+
+![alt text](images/Screen1.bmp)
+![alt text](images/Screen2.bmp)

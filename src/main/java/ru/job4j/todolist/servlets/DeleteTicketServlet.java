@@ -1,6 +1,6 @@
 package ru.job4j.todolist.servlets;
 
-import ru.job4j.todolist.ToDoStore;
+import ru.job4j.todolist.repository.ToDoStore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

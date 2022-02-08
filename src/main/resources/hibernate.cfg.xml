@@ -17,7 +17,7 @@
         <property name="format_sql">true</property>
         <property name="use_sql_comments">true</property>
 
-        <mapping class="ru.job4j.todolist.Ticket" />
+        <mapping class="ru.job4j.todolist.model.Ticket"/>
 
     </session-factory>
 </hibernate-configuration>
