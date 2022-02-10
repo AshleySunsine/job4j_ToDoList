@@ -22,14 +22,10 @@ public class AuthServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         User user = dbStore.findUserByEmail(email);
-        final Gson gson = new GsonBuilder().create();
-        String userJson = gson.toJson(user);
         if ((user != null) && (user.getPassword().equals(password))) {
             HttpSession sc = req.getSession();
             sc.setAttribute("user", user);
-           /* req.setAttribute("userJson", userJson);*/
             req.getRequestDispatcher("index.jsp").forward(req, resp);
-           // resp.sendRedirect(req.getContextPath() + "/index.jsp");
         } else {
             req.setAttribute("error", "Не верный email или пароль");
             req.getRequestDispatcher("login.jsp").forward(req, resp);
