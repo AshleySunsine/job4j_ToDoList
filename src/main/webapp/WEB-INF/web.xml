@@ -68,4 +68,22 @@
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
 
+  <servlet>
+    <servlet-name>GetUserServlet</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlets.GetUserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetUserServlet</servlet-name>
+    <url-pattern>/getuser.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>ru.job4j.todolist.servlets.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/logout.do</url-pattern>
+  </servlet-mapping>
+
 </web-app>

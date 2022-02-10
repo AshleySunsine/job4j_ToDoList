@@ -10,15 +10,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 public class GetUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    /*    resp.setContentType("application/json; charset=utf-8");
+        resp.setContentType("application/json; charset=utf-8");
         resp.setCharacterEncoding("UTF-8");
-        User user = dbStore.findUserByEmail(email);
+        OutputStream output = resp.getOutputStream();
+        User user = (User) req.getSession().getAttribute("user");
         final Gson gson = new GsonBuilder().create();
-        String userJson = gson.toJson(user);*/
+        String userJson = gson.toJson(user);
+        System.out.println(userJson);
+        output.write(userJson.getBytes(StandardCharsets.UTF_8));
+        output.flush();
+        output.close();
     }
 }

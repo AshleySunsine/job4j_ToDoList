@@ -17,13 +17,15 @@ public class SaveTicketServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
+        ToDoStore toDoStore = new ToDoStore();
         String descripton = req.getParameter("description");
         String name = req.getParameter("todoName");
-        //User user = (User) req.getParameter("user");
+        String userEmail = req.getParameter("userEmail");
+        User user = toDoStore.findUserByEmail(userEmail);
         Timestamp created = new Timestamp(System.currentTimeMillis());
         boolean done = false;
-        Ticket newTicket = new Ticket(name, descripton, created, done, null);
-        ToDoStore toDoStore = new ToDoStore();
+        Ticket newTicket = new Ticket(name, descripton, created, done, user);
+
         Ticket ticket = toDoStore.addTicket(newTicket);
         System.out.println(ticket);
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");

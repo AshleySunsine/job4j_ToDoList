@@ -1,7 +1,22 @@
+
+
     var ticketDone;
     var ticketNotDone;
     var checkDone;
     var notDoneTable;
+    var userEmail;
+
+    function getUserEmail() {
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8081/todolist/getuser.do",
+            dataType: "json"
+        }).done(
+            function(data) {
+                userEmail = data.email;
+            });
+    }
+
     function send() {
     $.ajax({
         type: "POST",
@@ -14,7 +29,7 @@
             checkDone = document.getElementsByName('notDoneCheck');
             notDoneTable = document.getElementsByName('notDoneTable');
             ticketNotDone.forEach(function (item, i, arr) {
-                $('#notDoneTable tr:last').after('<tr><th scope="row">' + item.userTick + '</th><td>'
+                $('#notDoneTable tr:last').after('<tr><th scope="row">' + userEmail + '</th><td>'
                     + item.id + '</th><td>'
                     + item.name + '</th><td>'
                     + item.description + '</th><td>'
@@ -50,7 +65,7 @@
     function showDone() {
     if (document.getElementById('notDoneCheck').checked) {
     ticketDone.forEach(function (item, i, arr) {
-    $('#doneTable tr:last').after('<tr><th scope="row">' + item.userTick + '</th><td>'
+    $('#doneTable tr:last').after('<tr><th scope="row">' + userEmail + '</th><td>'
     + item.id + '</th><td>'
     + item.name + '</th><td>'
     + item.description + '</th><td>'
@@ -71,7 +86,8 @@
 }
 
     $(document).ready( function(){
-    send();
+        getUserEmail();
+        send();
 });
 
     function clickTicked(id) {
@@ -96,6 +112,5 @@
             window.location.reload();
         }
     });
-
 
 }

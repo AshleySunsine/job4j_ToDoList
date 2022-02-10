@@ -29,7 +29,10 @@
 
 <body>
     <form action="<%=request.getContextPath()%>/saveticket.do" method="post">
-        <input type="hidden"  id="user" name="user" value="">
+        <input type="hidden"  id="userEmail" name="userEmail" value='${userEmail}'>
+        <li class="nav-item">
+            <a class="nav-link" href="<%=request.getContextPath()%>/logout.do">Выйти</a>
+        </li>
         <hr>
         <div class="col-md-4 mb-3">
             <label for="todoName">Название задачи</label>
@@ -119,9 +122,10 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary" onclick='{
-            alert(<%=request.getAttribute("userJson")%>);
-}'>Обновить</button>
+        <script>
+
+        </script>
+    <button type="button" class="btn btn-primary" onclick='ss()'>Обновить</button>
 
 </form>
 </body>

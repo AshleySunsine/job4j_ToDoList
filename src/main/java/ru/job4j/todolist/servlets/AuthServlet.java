@@ -27,7 +27,7 @@ public class AuthServlet extends HttpServlet {
         if ((user != null) && (user.getPassword().equals(password))) {
             HttpSession sc = req.getSession();
             sc.setAttribute("user", user);
-            req.setAttribute("userJson", userJson);
+           /* req.setAttribute("userJson", userJson);*/
             req.getRequestDispatcher("index.jsp").forward(req, resp);
            // resp.sendRedirect(req.getContextPath() + "/index.jsp");
         } else {
