@@ -1,6 +1,7 @@
 package ru.job4j.todolist.servlets;
 
 import ru.job4j.todolist.model.Ticket;
+import ru.job4j.todolist.model.User;
 import ru.job4j.todolist.repository.ToDoStore;
 
 import javax.servlet.RequestDispatcher;
@@ -18,9 +19,10 @@ public class SaveTicketServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         String descripton = req.getParameter("description");
         String name = req.getParameter("todoName");
+        //User user = (User) req.getParameter("user");
         Timestamp created = new Timestamp(System.currentTimeMillis());
         boolean done = false;
-        Ticket newTicket = new Ticket(name, descripton, created, done);
+        Ticket newTicket = new Ticket(name, descripton, created, done, null);
         ToDoStore toDoStore = new ToDoStore();
         Ticket ticket = toDoStore.addTicket(newTicket);
         System.out.println(ticket);

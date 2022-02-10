@@ -1,7 +1,6 @@
     var ticketDone;
     var ticketNotDone;
     var checkDone;
-    var tableDone;
     var notDoneTable;
     function send() {
     $.ajax({
@@ -15,7 +14,8 @@
             checkDone = document.getElementsByName('notDoneCheck');
             notDoneTable = document.getElementsByName('notDoneTable');
             ticketNotDone.forEach(function (item, i, arr) {
-                $('#notDoneTable tr:last').after('<tr><th scope="row">' + item.id + '</th><td>'
+                $('#notDoneTable tr:last').after('<tr><th scope="row">' + item.userTick + '</th><td>'
+                    + item.id + '</th><td>'
                     + item.name + '</th><td>'
                     + item.description + '</th><td>'
                     + item.created + '</th><td>'
@@ -34,9 +34,9 @@
             });
             showDone();
         }
-    ).fail( function(xhr, textStatus, errorThrown) {
-        alert(JSON.stringify(xhr));
-    });
+    ).fail(function(xhr, textStatus, errorThrown) {
+        window.location = 'http://localhost:8081/todolist/login.jsp';
+        });
 }
 
     function clickCheckBox() {
@@ -50,7 +50,8 @@
     function showDone() {
     if (document.getElementById('notDoneCheck').checked) {
     ticketDone.forEach(function (item, i, arr) {
-    $('#doneTable tr:last').after('<tr><th scope="row">' + item.id + '</th><td>'
+    $('#doneTable tr:last').after('<tr><th scope="row">' + item.userTick + '</th><td>'
+    + item.id + '</th><td>'
     + item.name + '</th><td>'
     + item.description + '</th><td>'
     + item.created + '</th><td>'
@@ -95,4 +96,6 @@
             window.location.reload();
         }
     });
+
+
 }

@@ -8,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todolist.Store;
 import ru.job4j.todolist.model.Ticket;
+import ru.job4j.todolist.model.User;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ToDoStore implements Store {
     @Override
     public List<Ticket> findAll() {
         return this.tx(session -> {
-            List items = session.createQuery("from ru.job4j.todolist.Ticket")
+            List items = session.createQuery("from ru.job4j.todolist.model.Ticket")
                     .list();
             return items;
         });
@@ -108,6 +109,55 @@ public class ToDoStore implements Store {
     }
 
     @Override
+    public boolean addUser(User user) {
+        return this.tx(session -> {
+            Integer id = (Integer) session.save(user);
+            user.setId(id);
+            return true;
+        });
+    }
+
+    @Override
+    public boolean deleteUser(int id) {
+        return this.tx(session -> {
+            boolean out = false;
+            User us = session.load(User.class, id);
+            session.delete(us);
+            if ((session.load(User.class, id)) == null) {
+                out = true;
+            }
+            return out;
+        });
+    }
+
+    @Override
+    public List<User> findAllUser() {
+        return this.tx(session -> {
+            List items = session.createQuery("from ru.job4j.todolist.model.User")
+                    .list();
+            return items;
+        });
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return this.tx(session -> {
+            User user = (User) session.createSQLQuery("select * from usertick where email = ( :email );")
+                      .setParameter("email", email).addEntity(User.class).uniqueResult();
+            System.out.println(user);
+            return user;
+                }
+        );
+    }
+
+    @Override
+    public User findUserById(int id) {
+        return this.tx(session ->
+                session.load(User.class, id)
+        );
+    }
+
+    @Override
     public void close() {
         StandardServiceRegistryBuilder.destroy(registry);
     }
@@ -115,7 +165,7 @@ public class ToDoStore implements Store {
     public static void main(String[] args) {
         ToDoStore store = new ToDoStore();
         Ticket tik = new Ticket("name", "description",
-                new Timestamp(System.currentTimeMillis()), false);
+                new Timestamp(System.currentTimeMillis()), false, new User(0, "fromMain", "fromMain", "fromMain"));
         store.addTicket(tik);
         System.out.println(store.findAll());
     }

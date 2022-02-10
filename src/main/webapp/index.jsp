@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="ru.job4j.todolist.model.Ticket" %>
+<%@ page import="ru.job4j.todolist.model.User" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <!doctype html>
 <html lang="en">
@@ -26,8 +26,10 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
 
+
 <body>
     <form action="<%=request.getContextPath()%>/saveticket.do" method="post">
+        <input type="hidden"  id="user" name="user" value="">
         <hr>
         <div class="col-md-4 mb-3">
             <label for="todoName">Название задачи</label>
@@ -68,7 +70,8 @@
                     <table class="table table-striped table-secondary" id="notDoneTable">
                         <thead>
                         <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">Пользователь</th>
+                            <th scope="col">Id задачи</th>
                             <th scope="col">Название</th>
                             <th scope="col">Описание</th>
                             <th scope="col">Дата создания</th>
@@ -97,11 +100,13 @@
                     <table class="table table-striped table-success" id="doneTable">
                         <thead>
                         <tr>
+                            <th scope="col">Пользователь</th>
                             <th scope="col">Id</th>
                             <th scope="col">Название</th>
                             <th scope="col">Описание</th>
                             <th scope="col">Дата создания</th>
                             <th scope="col">Статус</th>
+                            <th scope="col">X</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -114,7 +119,10 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary" onclick="reloadWindow()">Обновить</button>
+    <button type="button" class="btn btn-primary" onclick='{
+            alert(<%=request.getAttribute("userJson")%>);
+}'>Обновить</button>
+
 </form>
 </body>
 </html>

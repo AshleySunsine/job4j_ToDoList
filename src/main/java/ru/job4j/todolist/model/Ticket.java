@@ -14,14 +14,19 @@ public class Ticket {
     private Timestamp created;
     private boolean done;
 
+    @ManyToOne
+    @JoinColumn(name = "userName")
+    private User userTick;
+
     public Ticket() {
     }
 
-    public Ticket(String name, String description, Timestamp created, boolean done) {
+    public Ticket(String name, String description, Timestamp created, boolean done, User user) {
         this.name = name;
         this.description = description;
         this.created = created;
         this.done = done;
+        this.userTick = user;
     }
 
     public int getId() {
@@ -62,6 +67,14 @@ public class Ticket {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public User getUserTick() {
+        return userTick;
+    }
+
+    public void setUserTick(User userTick) {
+        this.userTick = userTick;
     }
 
     @Override
