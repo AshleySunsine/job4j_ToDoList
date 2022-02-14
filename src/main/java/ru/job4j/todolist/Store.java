@@ -1,13 +1,15 @@
 package ru.job4j.todolist;
 
 
+import ru.job4j.todolist.model.Category;
 import ru.job4j.todolist.model.Ticket;
 import ru.job4j.todolist.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Store extends AutoCloseable {
-   Ticket addTicket(Ticket ticket);
+   void addTicket(Ticket ticket);
    boolean delete(int id);
    List<Ticket> findAll();
    List<Ticket> findAllDone();
@@ -20,4 +22,6 @@ public interface Store extends AutoCloseable {
    List<User> findAllUser();
    User findUserByEmail(String email);
    User findUserById(int id);
+
+   List<Category> findAllCategory();
 }

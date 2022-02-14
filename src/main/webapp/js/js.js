@@ -24,15 +24,21 @@
         dataType: "json"
     }).done(
         function(data) {
-            ticketDone = data.ticketDone;
-            ticketNotDone = data.ticketNotDone;
+            ticketDone = data.mapTiket.ticketDone;
+            ticketNotDone = data.mapTiket.ticketNotDone;
             checkDone = document.getElementsByName('notDoneCheck');
             notDoneTable = document.getElementsByName('notDoneTable');
             ticketNotDone.forEach(function (item, i, arr) {
+                let categor = new Array();
+                item.categories.forEach(function (itemCateg, i, arr) {
+                    categor[i] = itemCateg.name;
+                });
+
                 $('#notDoneTable tr:last').after('<tr><th scope="row">' + userEmail + '</th><td>'
                     + item.id + '</th><td>'
                     + item.name + '</th><td>'
                     + item.description + '</th><td>'
+                    + categor + '</th><td>'
                     + item.created + '</th><td>'
                     + '<input class="form-check-input" '
                     + 'type="checkbox" id="' + item.id + '" '
@@ -46,6 +52,10 @@
                     + '<i class="fa fa-trash-o" aria-hidden="true"></i>'
                     + '</a>'
                     + '</td></tr>');
+            });
+
+            data.mapCategory.categoryList.forEach(function (item, i, arr) {
+                $('#cIds').append('<option value="' + item.id + '">' + item.name + '</option>');
             });
             showDone();
         }
@@ -65,10 +75,15 @@
     function showDone() {
     if (document.getElementById('notDoneCheck').checked) {
     ticketDone.forEach(function (item, i, arr) {
+        let categor = new Array();
+        item.categories.forEach(function (itemCateg, i, arr) {
+            categor[i] = itemCateg.name;
+        });
     $('#doneTable tr:last').after('<tr><th scope="row">' + userEmail + '</th><td>'
     + item.id + '</th><td>'
     + item.name + '</th><td>'
     + item.description + '</th><td>'
+    + categor + '</th><td>'
     + item.created + '</th><td>'
     + '<input class="form-check-input" checked="true" type="checkbox" id="' + item.id + '" '
     + 'name="' + item.id + '" '

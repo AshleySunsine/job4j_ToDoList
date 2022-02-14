@@ -7,6 +7,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todolist.Store;
+import ru.job4j.todolist.model.Category;
 import ru.job4j.todolist.model.Ticket;
 import ru.job4j.todolist.model.User;
 
@@ -22,8 +23,8 @@ public class ToDoStore implements Store {
             .buildMetadata().buildSessionFactory();
 
     @Override
-    public Ticket addTicket(Ticket ticket) {
-        return this.tx(session -> {
+    public void addTicket(Ticket ticket) {
+         this.tx(session -> {
             ticket.setCreated(new Timestamp(System.currentTimeMillis()));
             Integer id = (Integer) session.save(ticket);
             ticket.setId(id);
@@ -56,7 +57,7 @@ public class ToDoStore implements Store {
     @Override
     public List<Ticket> findAll() {
         return this.tx(session -> {
-            List items = session.createQuery("from ru.job4j.todolist.model.Ticket")
+            List items = session.createQuery("select distinct c from ru.job4j.todolist.model.Ticket c join fetch c.categories")
                     .list();
             return items;
         });
@@ -65,10 +66,9 @@ public class ToDoStore implements Store {
     @Override
     public List<Ticket> findAllDone() {
         return this.tx(session -> {
-            List items = session.createSQLQuery(
-                            "select * from ticket where done=( :isDone );")
-                    .setParameter("isDone", true)
-                    .addEntity(Ticket.class).list();
+            List items = session.createQuery(
+                            "select distinct c from ru.job4j.todolist.model.Ticket c join fetch c.categories where c.done = (:isDone)")
+                    .setParameter("isDone", true).list();
             return items;
         });
     }
@@ -76,10 +76,9 @@ public class ToDoStore implements Store {
     @Override
     public List<Ticket> findAllNotDone() {
         return this.tx(session -> {
-            List items = session.createSQLQuery(
-                            "select * from ticket where done=( :isDone );")
-                    .setParameter("isDone", false)
-                    .addEntity(Ticket.class).list();
+            List items = session.createQuery(
+                            "select distinct c from ru.job4j.todolist.model.Ticket c join fetch c.categories where c.done = (:isDone)")
+                    .setParameter("isDone", false).list();
             return items;
         });
     }
@@ -155,6 +154,15 @@ public class ToDoStore implements Store {
         return this.tx(session ->
                 session.load(User.class, id)
         );
+    }
+
+    @Override
+    public List<Category> findAllCategory() {
+        return this.tx(session -> {
+            List categories = session.createQuery("from ru.job4j.todolist.model.Category")
+                    .list();
+            return categories;
+        });
     }
 
     @Override

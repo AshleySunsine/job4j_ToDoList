@@ -44,6 +44,12 @@
             <textarea required class="form-control" id="description" name="description" rows="3"></textarea>
         </div>
 
+            <label class="col-form-label col-sm-3" for="cIds" style="font-weight: 900">Выберите категорию</label>
+            <div div class="col-md-5 mb-3">
+                <select class="form-control" name="cIds" id="cIds" multiple>
+                </select>
+            </div>
+
     <div class="col-md-4 mb-3">
         <div class="form-check">
              <button type="submit" class="btn btn-primary">Сохранить задачу</button>
@@ -77,6 +83,7 @@
                             <th scope="col">Id задачи</th>
                             <th scope="col">Название</th>
                             <th scope="col">Описание</th>
+                            <th scope="col">Катигория</th>
                             <th scope="col">Дата создания</th>
                             <th scope="col">Статус</th>
                             <th scope="col">X</th>
@@ -107,6 +114,7 @@
                             <th scope="col">Id</th>
                             <th scope="col">Название</th>
                             <th scope="col">Описание</th>
+                            <th scope="col">Катигория</th>
                             <th scope="col">Дата создания</th>
                             <th scope="col">Статус</th>
                             <th scope="col">X</th>

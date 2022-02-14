@@ -44,7 +44,7 @@
             }
         }
     </script>
-    <title>Работа мечты</title>
+    <title>Список дел</title>
 </head>
 <body>
 <div class="container pt-3">
