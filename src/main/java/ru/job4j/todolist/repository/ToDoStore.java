@@ -13,7 +13,9 @@ import ru.job4j.todolist.model.User;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ToDoStore implements Store {
 
@@ -23,8 +25,16 @@ public class ToDoStore implements Store {
             .buildMetadata().buildSessionFactory();
 
     @Override
-    public void addTicket(Ticket ticket) {
+    public void addTicket(Ticket ticket, String[] categoryIds) {
          this.tx(session -> {
+             Map<Integer, Category> mapCat = (Map<Integer, Category>) session.createQuery("from ru.job4j.todolist.model.Category")
+                     .list()
+                     .stream()
+                     .collect(Collectors
+                             .toMap(Category::getId, Function.identity()));
+             for (String c : categoryIds) {
+                 ticket.getCategories().add(mapCat.get(Integer.parseInt(c)));
+             }
             ticket.setCreated(new Timestamp(System.currentTimeMillis()));
             Integer id = (Integer) session.save(ticket);
             ticket.setId(id);
@@ -171,10 +181,10 @@ public class ToDoStore implements Store {
     }
 
     public static void main(String[] args) {
-        ToDoStore store = new ToDoStore();
+        /*ToDoStore store = new ToDoStore();
         Ticket tik = new Ticket("name", "description",
                 new Timestamp(System.currentTimeMillis()), false, new User(0, "fromMain", "fromMain", "fromMain"));
-        store.addTicket(tik);
-        System.out.println(store.findAll());
+        store.addTicket(tik, );
+        System.out.println(store.findAll());*/
     }
 }

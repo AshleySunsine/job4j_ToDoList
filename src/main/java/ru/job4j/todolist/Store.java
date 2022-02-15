@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface Store extends AutoCloseable {
-   void addTicket(Ticket ticket);
+   void addTicket(Ticket ticket, String[] categoryIds);
    boolean delete(int id);
    List<Ticket> findAll();
    List<Ticket> findAllDone();

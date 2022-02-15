@@ -100,12 +100,12 @@ public class Ticket {
             return false;
         }
         Ticket ticket = (Ticket) o;
-        return id == ticket.id && done == ticket.done && Objects.equals(name, ticket.name) && Objects.equals(description, ticket.description) && Objects.equals(created, ticket.created) && Objects.equals(userTick, ticket.userTick) && Objects.equals(categories, ticket.categories);
+        return id == ticket.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, created, done, userTick, categories);
+        return Objects.hash(id);
     }
 
     @Override

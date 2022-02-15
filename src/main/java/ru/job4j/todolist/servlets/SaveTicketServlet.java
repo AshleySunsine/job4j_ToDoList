@@ -1,6 +1,5 @@
 package ru.job4j.todolist.servlets;
 
-import ru.job4j.todolist.model.Category;
 import ru.job4j.todolist.model.Ticket;
 import ru.job4j.todolist.model.User;
 import ru.job4j.todolist.repository.ToDoStore;
@@ -12,12 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class SaveTicketServlet extends HttpServlet {
     @Override
@@ -35,14 +28,8 @@ public class SaveTicketServlet extends HttpServlet {
         Timestamp created = new Timestamp(System.currentTimeMillis());
         boolean done = false;
         Ticket newTicket = new Ticket(name, descripton, created, done, user);
-        Map<Integer, Category> mapCat = toDoStore.findAllCategory()
-                .stream()
-                .collect(Collectors
-                        .toMap(Category::getId, Function.identity()));
-        for (String c : categoryId) {
-            newTicket.getCategories().add(mapCat.get(Integer.parseInt(c)));
-        }
-        toDoStore.addTicket(newTicket);
+
+        toDoStore.addTicket(newTicket, categoryId);
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");
         requestDispatcher.forward(req, resp);
     }
