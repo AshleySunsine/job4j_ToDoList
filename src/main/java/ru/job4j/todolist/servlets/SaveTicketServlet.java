@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class SaveTicketServlet extends HttpServlet {
     @Override
@@ -25,7 +25,7 @@ public class SaveTicketServlet extends HttpServlet {
         String[] categoryId = req.getParameterValues("cIds");
 
         User user = toDoStore.findUserByEmail(userEmail);
-        Timestamp created = new Timestamp(System.currentTimeMillis());
+        Date created = new Date(System.currentTimeMillis());
         boolean done = false;
         Ticket newTicket = new Ticket(name, descripton, created, done, user);
 
